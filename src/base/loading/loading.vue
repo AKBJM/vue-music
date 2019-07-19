@@ -4,18 +4,18 @@
     <p class="desc">{{title}}</p>
   </div>
 </template>
-<script type="text/ecmascript-6">
-  export default {
-    props: {
-      title: {
-        type: String,
-        default: '正在载入...'
-      }
+<script>
+export default {
+  props: {
+    title: {
+      type: String,
+      default: '正在载入...'
     }
   }
+}
 </script>
-<style scoped lang="stylus" rel="stylesheet/stylus">
-  @import "~common/stylus/variable"
+<style scoped lang="stylus">
+@import "~common/stylus/variable"
 
   .loading
     width: 100%

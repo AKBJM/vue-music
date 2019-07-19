@@ -5,11 +5,15 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import fastclick from 'fastclick'
+import VueLazyload from 'vue-lazyload'
 
 import 'common/stylus/index.styl'
 
 /* eslint-disable no-new  移动端点击没有300ms的延迟 */
 fastclick.attach(document.body)
+Vue.use(VueLazyload, {
+  loading: require('./common/image/default.png')
+})
 
 Vue.config.productionTip = false
 
