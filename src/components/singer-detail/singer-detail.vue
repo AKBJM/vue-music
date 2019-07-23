@@ -1,7 +1,5 @@
 <template>
-  <transition name="slide-left">
-    <div class="singer-detail"></div>
-  </transition>
+  <div class="singer-detail"></div>
 </template>
 
 <script>
@@ -19,9 +17,4 @@ export default {}
     right: 0
     bottom: 0
     background: $color-background
-
-  .slide-left-enter-active, .slide-left-leave-active
-    transition: all 0.5s
-  .slide-left-enter, .slide-left-leave-to
-    transform: translate3d(100%, 0, 0)
 </style>
