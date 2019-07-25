@@ -64,6 +64,21 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         }).catch((e) => {
           console.log(e)
         })
+      }),
+      app.get('/api/getSongVkey', (req, res) => {
+        var url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
+
+        axios.get(url, {
+          headers: {
+            Origin: 'https://y.qq.com',
+            referer: 'https://y.qq.com/portal/player.html'
+          },
+          params: req.query
+        }).then((response) => {
+          res.json(response.data)
+        }).catch((e) => {
+          console.log(e)
+        })
       })
     }
   },

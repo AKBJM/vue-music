@@ -33,7 +33,7 @@ export default class Song {
   // }
 }
 // 抽象一个方法，创建歌曲，避免写重复的代码
-export function createSong (musicData) {
+export function createSong (musicData, vkey) {
   return new Song({
     id: musicData.songid,
     mid: musicData.songmid,
@@ -42,7 +42,7 @@ export function createSong (musicData) {
     album: musicData.albumname,
     duration: musicData.interval,
     image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`,
-    url: `http://ws.stream.qqmusic.qq.com/${musicData.songid}.m4a?fromtag=46`
+    url: `http://isure.stream.qqmusic.qq.com/C400${musicData.songmid}.m4a?guid=13912579&vkey=${vkey}&uin=0&fromtag=66`
   })
 }
 // 抽象出数据中的歌手
