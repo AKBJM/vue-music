@@ -11,10 +11,12 @@ const matutaions = {
     state.fullScreen = flag
   },
   [types.SET_PLAYLIST] (state, list) {
-    state.playlist = list
+    let playlist = list.slice()
+    state.playlist = playlist
   },
   [types.SET_SEQUENCE_LIST] (state, list) {
-    state.sequenceList = list
+    let sequenceList = list.slice()
+    state.sequenceList = sequenceList
   },
   [types.SET_PLAY_MODE] (state, mode) {
     state.mode = mode

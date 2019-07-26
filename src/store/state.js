@@ -1,4 +1,5 @@
 import { playMode } from '@/common/js/config'
+
 const state = {
   singer: {},
   // 播放器相关
@@ -7,7 +8,8 @@ const state = {
   playlist: [],
   sequenceList: [],
   mode: playMode.sequence,
-  currentIndex: -1
+  currentIndex: -1,
+  strict: false
 }
 
 export default state

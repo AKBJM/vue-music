@@ -23,7 +23,11 @@
       @scroll="scroll"
     >
       <div class="song-list-wrapper">
-        <song-list :songs="songs"></song-list>
+        <song-list
+          :songs="songs"
+          @select="selectItem"
+        >
+        </song-list>
       </div>
       <div class="loading-coantainer" v-show="!songs.length">
         <loading></loading>
@@ -37,6 +41,7 @@ import Scroll from '@/base/scroll/scroll'
 import SongList from '@/base/song-list/song-list'
 import { prefixStyle } from '@/common/js/dom'
 import Loading from '@/base/loading/loading'
+import { mapActions } from 'vuex'
 
 const RESEVER_HEIGHT = 40
 const TRANSFORM = prefixStyle('transform')
@@ -84,7 +89,17 @@ export default {
     },
     back () {
       this.$router.back()
-    }
+    },
+    selectItem (song, index) {
+      // 点击播放，需要提交mutation 修改state
+      this.selectPlay({
+        list: this.songs,
+        index
+      })
+    },
+    ...mapActions([
+      'selectPlay'
+    ])
   },
   watch: {
     scrollY (newY) {
