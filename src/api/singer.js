@@ -40,7 +40,7 @@ export function getSongVkey (songmid) {
   const url = '/api/getSongVkey'
 
   const data = Object.assign({}, commonParams, {
-    // '-': 'getplaysongvkey14120747999226269',
+    '-': 'getplaysongvkey14120747999226269',
     hostUin: 0,
     format: 'json',
     platform: 'yqq',
