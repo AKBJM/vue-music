@@ -51,7 +51,7 @@ export default {
       list.forEach((item) => {
         // 结构赋值
         let { musicData } = item
-        getSongVkey(musicData.songid).then((res) => {
+        getSongVkey(musicData.songmid).then((res) => {
           const vkey = res.req_0.data.midurlinfo[0].vkey
           if (musicData.songid && musicData.albumid) {
             ret.push(createSong(musicData, vkey))
