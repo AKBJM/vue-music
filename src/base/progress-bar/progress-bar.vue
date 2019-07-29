@@ -2,10 +2,12 @@
   <div class="progress-bar" ref="progressBar" @click="progressClick">
     <div class="bar-inner">
       <div class="progress" ref="progress"></div>
-      <div class="progress-btn-wrapper" ref="progressBtn"
-           @touchstart.prevent="progressTouchStart"
-           @touchmove.prevent="progressTouchMove"
-           @touchend="progressTouchEnd"
+      <div
+        class="progress-btn-wrapper"
+        ref="progressBtn"
+        @touchstart.prevent="progressTouchStart"
+        @touchmove.prevent="progressTouchMove"
+        @touchend="progressTouchEnd"
       >
         <div class="progress-btn"></div>
       </div>
@@ -17,7 +19,7 @@
 import {prefixStyle} from 'common/js/dom'
 
 const progressBtnWidth = 16
-const transform = prefixStyle('transform')
+const TRANSFORM = prefixStyle('transform')
 
 export default {
   props: {
@@ -27,9 +29,11 @@ export default {
     }
   },
   created () {
+    // 不同的函数之间共享数据
     this.touch = {}
   },
   methods: {
+    // 进度条拖拽运动
     progressTouchStart (e) {
       this.touch.initiated = true
       this.touch.startX = e.touches[0].pageX
@@ -57,12 +61,13 @@ export default {
     },
     _triggerPercent () {
       const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth
-      const percent = this.$refs.progress.clientWidth / barWidth
-      this.$emit('percentChange', percent)
+      const _percent = this.$refs.progress.clientWidth / barWidth
+      this.$emit('percentChange', _percent)
     },
     _offset (offsetWidth) {
+      // 小球和进度条的运动
       this.$refs.progress.style.width = `${offsetWidth}px`
-      this.$refs.progressBtn.style[transform] = `translate3d(${offsetWidth}px,0,0)`
+      this.$refs.progressBtn.style[TRANSFORM] = `translate3d(${offsetWidth}px,0,0)`
     }
   },
   watch: {

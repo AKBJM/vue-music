@@ -5,12 +5,16 @@
     </div>
     <h1 class="title" v-html="title"></h1>
     <div class="bg-img" :style="bgStyle" ref="bgImg">
-      <div class="play-wrapper">
-        <div class="filter" ref="filter"></div>
-        <div class="play" v-show="songs.length" ref="palyBtn">
+      <div class="play-wrapper" @click="random">
+        <div
+          class="play"
+          v-show="songs.length"
+          ref="palyBtn"
+        >
           <i class="icon-play"></i>
           <p class="text">随机播放全部</p>
         </div>
+        <div class="filter" ref="filter"></div>
       </div>
     </div>
     <div class="bg-layer" ref="layer"></div>
@@ -97,8 +101,15 @@ export default {
         index
       })
     },
+    random () {
+      console.log('click')
+      this.randomPlay({
+        list: this.songs
+      })
+    },
     ...mapActions([
-      'selectPlay'
+      'selectPlay',
+      'randomPlay'
     ])
   },
   watch: {
@@ -207,6 +218,7 @@ export default {
             font-size: $font-size-small
       .filter
         position: absolute
+        z-index: 40
         top: 0
         left: 0
         width: 100%
