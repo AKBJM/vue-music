@@ -1,6 +1,6 @@
-// import {getLyric} from 'api/song'
-// import {ERR_OK} from 'api/config'
-// import {Base64} from 'js-base64'
+import {getLyric} from '@/api/song'
+import {ERR_OK} from '@/api/config'
+import {Base64} from 'js-base64'
 
 // 创建歌曲的类
 export default class Song {
@@ -15,22 +15,22 @@ export default class Song {
     this.url = url
   }
 
-  // getLyric() {
-  //   if (this.lyric) {
-  //     return Promise.resolve(this.lyric)
-  //   }
+  getLyric () {
+    if (this.lyric) {
+      return Promise.resolve(this.lyric)
+    }
 
-  //   return new Promise((resolve, reject) => {
-  //     getLyric(this.mid).then((res) => {
-  //       if (res.retcode === ERR_OK) {
-  //         this.lyric = Base64.decode(res.lyric)
-  //         resolve(this.lyric)
-  //       } else {
-  //         reject('no lyric')
-  //       }
-  //     })
-  //   })
-  // }
+    return new Promise((resolve, reject) => {
+      getLyric(this.mid).then((res) => {
+        if (res.retcode === ERR_OK) {
+          this.lyric = Base64.decode(res.lyric)
+          resolve(this.lyric)
+        } else {
+          reject(new Error('no lyric'))
+        }
+      })
+    })
+  }
 }
 // 抽象一个方法，创建歌曲，避免写重复的代码
 export function createSong (musicData, vkey) {

@@ -1,17 +1,20 @@
 import {commonParams} from './config'
 import axios from 'axios'
 
-export function getLyric(mid) {
+export function getLyric (mid) {
   const url = '/api/lyric'
 
   const data = Object.assign({}, commonParams, {
+    '-': 'MusicJsonCallback_lrc',
+    pcachetime: +new Date(),
     songmid: mid,
-    platform: 'yqq',
+    platform: 'yqq.json',
+    loginUin: 0,
     hostUin: 0,
     needNewCode: 0,
-    categoryId: 10000000,
-    pcachetime: +new Date(),
-    format: 'json'
+    format: 'json',
+    g_tk: 5381,
+    inCharset: 'utf8'
   })
 
   return axios.get(url, {
