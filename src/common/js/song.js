@@ -14,7 +14,7 @@ export default class Song {
     this.image = image
     this.url = url
   }
-
+  // 这里应用了getLyric获取数据，歌曲类定义的方法
   getLyric () {
     if (this.lyric) {
       return Promise.resolve(this.lyric)
@@ -33,7 +33,7 @@ export default class Song {
     })
   }
 }
-// 抽象一个方法，创建歌曲，避免写重复的代码
+// 抽象一个方法，创建歌曲，设置需要的参数，避免写重复的代码
 export function createSong (musicData, vkey) {
   return new Song({
     id: musicData.songid,
