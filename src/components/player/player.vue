@@ -40,6 +40,9 @@
                 >
               </div>
             </div>
+            <div class="playing-lyric-wrapper">
+              <div class="playing-lyric">{{ playingLyric }}</div>
+            </div>
           </div>
           <scroll class="middle-r" ref="lyricList" :data="currentLyric && currentLyric.lines">
             <div class="lyric-wrapper">
@@ -152,7 +155,8 @@ export default {
       radius: 32,
       currentLyric: null,
       currentLineNum: 0,
-      currentShow: 'cd'
+      currentShow: 'cd',
+      playingLyric: ''
     }
   },
   computed: {
@@ -263,18 +267,27 @@ export default {
         return
       }
       this.setPlayingState(!this.playing)
+      // 歌曲暂停时 歌词也暂停
+      if (this.currentLyric) {
+        this.currentLyric.togglePlay()
+      }
     },
     next () {
       if (!this.songReady) {
         return
       }
-      let index = this.currentIndex + 1
-      if (index === this.playlist.length) {
-        index = 0
-      }
-      this.setCurrentIndex(index)
-      if (!this.playing) {
-        this.togglePlaying()
+      // 歌曲只有一首歌的时候
+      if (this.playList.length === 1) {
+        this.loop()
+      } else {
+        let index = this.currentIndex + 1
+        if (index === this.playlist.length) {
+          index = 0
+        }
+        this.setCurrentIndex(index)
+        if (!this.playing) {
+          this.togglePlaying()
+        }
       }
       this.songReady = false
     },
@@ -282,13 +295,18 @@ export default {
       if (!this.songReady) {
         return
       }
-      let index = this.currentIndex + 1
-      if (index === -1) {
-        index = this.playlist.length - 1
-      }
-      this.setCurrentIndex(index)
-      if (!this.playing) {
-        this.togglePlaying()
+      // 歌曲只有一首歌的时候
+      if (this.playList.length === 1) {
+        this.loop()
+      } else {
+        let index = this.currentIndex + 1
+        if (index === -1) {
+          index = this.playlist.length - 1
+        }
+        this.setCurrentIndex(index)
+        if (!this.playing) {
+          this.togglePlaying()
+        }
       }
       this.songReady = false
     },
@@ -306,9 +324,14 @@ export default {
         this.next()
       }
     },
+    // 循环播放
     loop () {
       this.$refs.audio.currentTime = 0
       this.$refs.audio.play()
+      // 循环播放结束 歌词回到开始位置
+      if (this.currentLyric) {
+        this.currentLyric.seek()
+      }
     },
     updateTime (e) {
       this.currentTime = e.target.currentTime
@@ -327,10 +350,15 @@ export default {
       }
       return num
     },
+    // 拖动滚动条
     changePercent (percent) {
+      const currentTime = this.currentSong.duration * percent
       this.$refs.audio.currentTime = this.currentSong.duration * percent
       if (!this.playing) {
         this.togglePlaying()
+      }
+      if (this.currentLyric) {
+        this.currentLyric.seek(currentTime * 1000)
       }
     },
     changeMode () {
@@ -357,7 +385,10 @@ export default {
         if (this.playing) {
           this.currentLyric.play()
         }
-        console.log(this.currentLyric)
+      }).catch(() => {
+        this.currentLyric = 'none'
+        this.playingLyric = ''
+        this.currentLineNum = 0
       })
     },
     handleLyric ({lineNum, txt}) {
@@ -368,6 +399,7 @@ export default {
       } else {
         this.$refs.lyricList.scrollTo(0, 0, 1000)
       }
+      this.playingLyric = txt
     },
     middleTouchStart (e) {
       this.touch.initiated = true
@@ -419,7 +451,7 @@ export default {
       this.$refs.lyricList.$el.style[TRANSFORM] = `translate3d(${_width}px, 0, 0)`
       this.$refs.lyricList.$el.style[TRANSITION_DURATION] = `${time}ms`
       this.$refs.middleL.style.opacity = _opacity
-      this.$refs.middleL.style[TRANSITION_DURATION] = 0
+      this.$refs.middleL.style[TRANSITION_DURATION] = `${time}ms`
     }
   },
   watch: {
@@ -427,10 +459,13 @@ export default {
       if (newSong === oldSong) {
         return
       }
-      this.$nextTick(() => {
+      if (this.currentLyric) {
+        this.currentLyric.stop()
+      }
+      setTimeout(() => {
         this.$refs.audio.play()
         this.getLyric()
-      })
+      }, 1000)
     },
     playing (newPlaying) {
       const audio = this.$refs.audio

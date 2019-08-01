@@ -1,5 +1,5 @@
 <template>
-  <div class="recommend">
+  <div class="recommend" ref="recommend">
     <scroll class="recommend-content" :data="discList" ref="scroll">
       <div>
         <div class="slider-wrapper" v-if="recommend.length">
@@ -14,7 +14,12 @@
         <div class="recommend-list">
           <h1 class="list-title">热门歌单推荐</h1>
           <ul>
-            <li class="item" v-for="item in discList" :key="item.dissid">
+            <li
+              class="item"
+              v-for="item in discList"
+              :key="item.dissid"
+              @click="selectItem(item)"
+            >
               <div class="icon">
                 <img v-lazy="item.imgurl" width="60" height="60" alt="">
               </div>
@@ -30,6 +35,9 @@
         </div>
       </div>
     </scroll>
+    <transition name="re-slide">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
@@ -39,8 +47,11 @@ import { ERR_OK } from '@/api/config'
 import Slider from '@/base/slider/slider'
 import Scroll from '@/base/scroll/scroll'
 import Loading from '@/base/loading/loading'
+import { playlistMixin } from '@/common/js/mixin'
+import { mapMutations } from 'vuex'
 
 export default {
+  mixins: [ playlistMixin ],
   data () {
     return {
       recommend: {},
@@ -53,6 +64,17 @@ export default {
     this._getDiscList()
   },
   methods: {
+    handlePlaylist (playList) {
+      const _bottom = playList.length > 0 ? '60px' : ''
+      this.$refs.recommend.style.bottom = _bottom
+      this.$refs.scroll.refresh()
+    },
+    selectItem (item) {
+      this.$router.push({
+        path: `/recommend/${item.dissid}`
+      })
+      this.setDisc(item)
+    },
     _getRecommend () {
       getRecommend().then((res) => {
         if (res.code === ERR_OK) {
@@ -71,7 +93,10 @@ export default {
         this.$refs.scroll.refresh()
         this.checkLoaded = true
       }
-    }
+    },
+    ...mapMutations({
+      setDisc: 'SET_DISC'
+    })
   },
   components: {
     Slider,
@@ -130,4 +155,9 @@ export default {
         width: 100%
         top: 50%
         transform: translateY(-50%)
+
+    .re-slide-enter-active, .re-slide-leave-active
+      transition: all 0.5s
+    .re-slide-enter, .re-slide-leave-to
+      transform: translate3d(100%, 0, 0)
 </style>

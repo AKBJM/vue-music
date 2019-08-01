@@ -46,12 +46,14 @@ import SongList from '@/base/song-list/song-list'
 import { prefixStyle } from '@/common/js/dom'
 import Loading from '@/base/loading/loading'
 import { mapActions } from 'vuex'
+import { playlistMixin } from '@/common/js/mixin'
 
 const RESEVER_HEIGHT = 40
 const TRANSFORM = prefixStyle('transform')
 const BACKDROP = prefixStyle('backdrop-filter')
 
 export default {
+  mixins: [ playlistMixin ],
   props: {
     bgImg: {
       type: String,
@@ -88,6 +90,11 @@ export default {
     this.$refs.list.$el.style.top = `${this.imgHeight}px`
   },
   methods: {
+    handlePlaylist (playList) {
+      const _bottom = playList.length > 0 ? '60px' : ''
+      this.$refs.list.$el.style.bottom = _bottom
+      this.$refs.list.refresh()
+    },
     scroll (pos) {
       this.scrollY = pos.y
     },

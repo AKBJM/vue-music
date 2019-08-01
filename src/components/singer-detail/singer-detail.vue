@@ -41,12 +41,12 @@ export default {
       }
       getSingerDetail(this.singer.id).then((res) => {
         if (res.code === ERR_OK) {
-          this.songs = this.normalizeSongs(res.data.list)
+          this.songs = this._normalizeSongs(res.data.list)
           console.log(this.songs)
         }
       })
     },
-    normalizeSongs (list) {
+    _normalizeSongs (list) {
       let ret = []
       list.forEach((item) => {
         // 结构赋值
