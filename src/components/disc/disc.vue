@@ -68,7 +68,7 @@ export default {
         album: musicData.album.name,
         duration: musicData.interval,
         image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.album.mid}.jpg?max_age=2592000`,
-        url: `http://isure.stream.qqmusic.qq.com/C400${musicData.songmid}.m4a?guid=13912579&vkey=${vkey}&uin=3735&fromtag=66`
+        url: `http://isure.stream.qqmusic.qq.com/C400${musicData.mid}.m4a?guid=13912579&vkey=${vkey}&uin=3735&fromtag=66`
       })
     },
     filterSinger (singer) {
