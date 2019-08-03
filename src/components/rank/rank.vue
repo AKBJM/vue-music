@@ -2,7 +2,12 @@
   <div class="rank" ref="rank">
     <scroll class="toplist" :data="topList" ref="toplist">
       <ul>
-        <li class="item" v-for="item in topList" :key="item.id">
+        <li
+          class="item"
+          v-for="item in topList"
+          :key="item.id"
+          @click="selectItem(item)"
+        >
           <div class="icon">
             <img width="100" height="100" v-lazy="item.picUrl" alt="">
           </div>
@@ -18,6 +23,9 @@
         <loading></loading>
       </div>
     </scroll>
+    <transition name="detail">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
@@ -27,6 +35,7 @@ import { ERR_OK } from '@/api/config'
 import Scroll from '@/base/scroll/scroll'
 import Loading from '@/base/loading/loading'
 import { playlistMixin } from '@/common/js/mixin'
+import { mapMutations } from 'vuex'
 
 export default {
   mixins: [playlistMixin],
@@ -51,7 +60,16 @@ export default {
       const _bottom = playlist.length ? '60px' : ''
       this.$refs.rank.style.bottom = _bottom
       this.$refs.toplist.refresh()
-    }
+    },
+    selectItem (item) {
+      this.$router.push({
+        path: `/rank/${item.id}`
+      })
+      this.setTopList(item)
+    },
+    ...mapMutations({
+      setTopList: 'SET_TOP_LIST'
+    })
   },
   components: {
     Scroll,
@@ -102,4 +120,8 @@ export default {
         width: 100%
         top: 50%
         transform: translateY(-50%)
+    .detail-enter-active, .detail-leave-active
+      transition: all 0.5s ease
+    .detail-enter, .detail-leave-to
+      transform: translate3d(100%, 0, 0)
 </style>

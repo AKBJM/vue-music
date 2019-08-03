@@ -1,5 +1,6 @@
 import jsonp from 'common/js/jsonp'
 import {commonParams, options} from './config'
+import axios from 'axios'
 
 export function getTopList () {
   const url = 'https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg'
@@ -13,18 +14,22 @@ export function getTopList () {
   return jsonp(url, data, options)
 }
 
-export function getMusicList (topid) {
-  const url = 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_toplist_cp.fcg'
+export function getRankList (topid) {
+  const url = '/api/getRankList'
 
   const data = Object.assign({}, commonParams, {
-    topid,
-    needNewCode: 1,
-    uin: 0,
-    tpl: 3,
-    page: 'detail',
-    type: 'top',
-    platform: 'h5'
+    '-': 'getUCGI3815685249242067',
+    hostUin: 0,
+    format: 'json',
+    platform: 'yqq',
+    needNewCode: 0,
+    g_tk: 34551177,
+    data: `{"detail":{"module":"musicToplist.ToplistInfoServer","method":"GetDetail","param":{"topId":${topid},"offset":0,"num":20,"period":"2019-08-02"}},"comm":{"ct":24,"cv":0}}`
   })
 
-  return jsonp(url, data, options)
+  return axios.get(url, {
+    params: data
+  }).then((res) => {
+    return Promise.resolve(res.data)
+  })
 }

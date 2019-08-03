@@ -30,6 +30,7 @@
         <song-list
           :songs="songs"
           @select="selectItem"
+          :rank="rank"
         >
         </song-list>
       </div>
@@ -68,6 +69,10 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    rank: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
