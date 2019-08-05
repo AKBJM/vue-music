@@ -47,7 +47,7 @@ export function createSong (musicData, vkey) {
   })
 }
 // 抽象出数据中的歌手
-function filterSinger (singer) {
+export function filterSinger (singer) {
   let ret = []
   if (!singer) {
     return ''
