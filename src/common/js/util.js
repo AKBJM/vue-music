@@ -12,7 +12,7 @@ export function shuffle (arr) {
   }
   return _arr
 }
-
+// 节流函数 搜索词改变的时候  增加或删除
 export function debounce (func, delay) {
   let timer
 

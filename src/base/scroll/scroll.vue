@@ -33,6 +33,7 @@ export default {
       type: Boolean,
       default: false
     },
+    // 正对搜索添加的一个变量，输入键盘之类的
     beforeScroll: {
       type: Boolean,
       default: false
@@ -63,7 +64,7 @@ export default {
           me.$emit('scroll', pos)
         })
       }
-
+      // 上拉刷新
       if (this.pullup) {
         this.scroll.on('scrollEnd', () => {
           if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {

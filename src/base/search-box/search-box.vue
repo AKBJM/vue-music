@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import {debounce} from 'common/js/util'
+import { debounce } from 'common/js/util'
 
 export default {
   props: {
@@ -36,7 +36,7 @@ export default {
     // 监听query 派发事件
     this.$watch('query', debounce((newQuery) => {
       this.$emit('query', newQuery)
-    }, 200))
+    }, 300))
   }
 }
 </script>

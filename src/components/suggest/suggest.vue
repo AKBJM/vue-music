@@ -1,24 +1,48 @@
 <template>
-  <div class="suggest">
+  <scroll
+    class="suggest"
+    :data="result"
+    :pullup="pullup"
+    :beforeScroll="beforeScroll"
+    @scrollToEnd="searchMore"
+    @beforeScroll="listScroll"
+    ref="scroll"
+  >
     <ul class="suggest-list">
-      <li class="suggest-item" v-for="(item, index) in result" :key="index">
+      <li
+        class="suggest-item"
+        v-for="(item, index) in result"
+        :key="index"
+        @click="selectItem(item)"
+      >
         <div class="icon">
-          <i :class="getTconCls(item)"></i>
+          <i :class="getIconCls(item)"></i>
         </div>
         <div class="name">
           <p class="text" v-html="getDisplayName(item)"></p>
         </div>
       </li>
+      <loading v-show="hasMore" title=""></loading>
     </ul>
-  </div>
+    <div class="no-result-wrapper" v-show="!hasMore && !result.length">
+      <no-result title="抱歉，暂无搜索结果"></no-result>
+    </div>
+  </scroll>
 </template>
 
 <script>
 import { search } from '@/api/search'
 import { ERR_OK } from '@/api/config'
-import { filterSinger } from '@/common/js/song'
+import { createSong } from '@/common/js/song'
+import Scroll from '@/base/scroll/scroll'
+import Loading from '@/base/loading/loading'
+import Singer from '@/common/js/singer'
+import { mapActions, mapMutations } from 'vuex'
+import NoResult from '@/base/no-result/no-result'
 
 const TYPE_SINGER = 'singer'
+const perpage = 20
+
 export default {
   props: {
     query: {
@@ -33,15 +57,36 @@ export default {
   data () {
     return {
       page: 1,
-      result: []
+      result: [],
+      pullup: true,
+      hasMore: true,
+      beforeScroll: true
     }
   },
   methods: {
     search () {
-      search(this.query, this.page, this.showSinger, 20).then((res) => {
+      // query发生变化时进行一些重置操作
+      this.page = 1
+      this.hasMore = true
+      this.$refs.scroll.scrollTo(0, 0)
+      search(this.query, this.page, this.showSinger, perpage).then((res) => {
         if (res.code === ERR_OK) {
           console.log(res.data)
           this.result = this._genResult(res.data)
+          console.log(this.result)
+          this._checkMore(res.data)
+        }
+      })
+    },
+    searchMore () {
+      if (!this.hasMore) {
+        return
+      }
+      this.page++
+      search(this.query, this.page, this.showSinger, perpage).then((res) => {
+        if (res.code === ERR_OK) {
+          this.result = this.result.concat(this._genResult(res.data))
+          this._checkMore(res.data)
         }
       })
     },
@@ -51,11 +96,26 @@ export default {
         ret.push({...data.zhida, ...{type: TYPE_SINGER}})
       }
       if (data.song) {
-        ret = ret.concat(data.song.list)
+        ret = ret.concat(this._normalizeSongs(data.song.list))
       }
       return ret
     },
-    getTconCls (item) {
+    _normalizeSongs (list) {
+      let ret = []
+      list.forEach((musicData) => {
+        if (musicData.songid && musicData.albumid) {
+          ret.push(createSong(musicData))
+        }
+      })
+      return ret
+    },
+    _checkMore (data) {
+      const song = data.song
+      if (!song.list.length || (song.curnum + song.curpage * perpage) >= song.totalnum) {
+        this.hasMore = false
+      }
+    },
+    getIconCls (item) {
       if (item.type === TYPE_SINGER) {
         return 'icon-mine'
       } else {
@@ -66,14 +126,42 @@ export default {
       if (item.type === TYPE_SINGER) {
         return item.singername
       } else {
-        return `${item.songname}-${filterSinger(item.singer)}`
+        return `${item.name}-${item.singer}`
       }
-    }
+    },
+    selectItem (item) {
+      if (item.type === TYPE_SINGER) {
+        const singer = new Singer({
+          id: item.singermid,
+          name: item.singername
+        })
+        this.$router.push({
+          path: `/search/${singer.id}`
+        })
+        this.setSinger(singer)
+      } else {
+        this.insertSong(item)
+      }
+    },
+    listScroll () {
+      this.$emit('listScroll')
+    },
+    ...mapMutations({
+      setSinger: 'SET_SINGER'
+    }),
+    ...mapActions([
+      'insertSong'
+    ])
   },
   watch: {
     query () {
       this.search()
     }
+  },
+  components: {
+    Scroll,
+    Loading,
+    NoResult
   }
 }
 </script>
