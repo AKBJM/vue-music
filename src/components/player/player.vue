@@ -117,11 +117,12 @@
             ></i>
           </progress-circle>
         </div>
-        <div class="control">
+        <div class="control" @click.stop="showPlaylist">
           <i class="icon-playlist"></i>
         </div>
       </div>
     </transition>
+    <playlist ref="playlist"></playlist>
     <audio
       :src="currentSong.url"
       ref="audio"
@@ -143,6 +144,7 @@ import { playMode } from '@/common/js/config'
 import { shuffle } from '@/common/js/util'
 import Lyric from 'lyric-parser'
 import Scroll from '@/base/scroll/scroll'
+import Playlist from 'components/playlist/playlist'
 
 const TRANSFORM = prefixStyle('transform')
 const TRANSITION_DURATION = prefixStyle('transitionDuration')
@@ -324,6 +326,9 @@ export default {
         this.next()
       }
     },
+    showPlaylist () {
+      this.$refs.playlist.show()
+    },
     // 循环播放
     loop () {
       this.$refs.audio.currentTime = 0
@@ -477,7 +482,8 @@ export default {
   components: {
     progressBar,
     progressCircle,
-    Scroll
+    Scroll,
+    Playlist
   }
 }
 </script>
