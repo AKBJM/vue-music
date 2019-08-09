@@ -141,15 +141,18 @@ import { prefixStyle } from '@/common/js/dom'
 import progressBar from '@/base/progress-bar/progress-bar'
 import progressCircle from '@/base/progress-circle/progress-circle'
 import { playMode } from '@/common/js/config'
-import { shuffle } from '@/common/js/util'
+// import { shuffle } from '@/common/js/util'
 import Lyric from 'lyric-parser'
 import Scroll from '@/base/scroll/scroll'
 import Playlist from 'components/playlist/playlist'
+
+import { playerMixin } from '@/common/js/mixin'
 
 const TRANSFORM = prefixStyle('transform')
 const TRANSITION_DURATION = prefixStyle('transitionDuration')
 
 export default {
+  mixins: [playerMixin],
   data () {
     return {
       songReady: false,
@@ -177,17 +180,17 @@ export default {
     percent () {
       return this.currentTime / this.currentSong.duration
     },
-    iconMode () {
-      return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
-    },
+    // iconMode () {
+    //   return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
+    // },
     ...mapGetters([
       'fullScreen',
-      'playlist',
+      // 'playlist',
       'currentSong',
-      'playing',
-      'currentIndex',
-      'mode',
-      'sequenceList'
+      'playing'
+      // 'currentIndex',
+      // 'mode',
+      // 'sequenceList'
     ])
   },
   created () {
@@ -366,24 +369,24 @@ export default {
         this.currentLyric.seek(currentTime * 1000)
       }
     },
-    changeMode () {
-      const mode = (this.mode + 1) % 3
-      this.setPlayMode(mode)
-      let list = null
-      if (mode === playMode.random) {
-        list = shuffle(this.sequenceList)
-      } else {
-        list = this.sequenceList
-      }
-      this.resetCurrentIndex(list)
-      this.setPlaylist(list)
-    },
-    resetCurrentIndex (list) {
-      let index = list.findIndex((item) => {
-        return item.id === this.currentSong.id
-      })
-      this.setCurrentIndex(index)
-    },
+    // changeMode () {
+    //   const mode = (this.mode + 1) % 3
+    //   this.setPlayMode(mode)
+    //   let list = null
+    //   if (mode === playMode.random) {
+    //     list = shuffle(this.sequenceList)
+    //   } else {
+    //     list = this.sequenceList
+    //   }
+    //   this.resetCurrentIndex(list)
+    //   this.setPlaylist(list)
+    // },
+    // resetCurrentIndex (list) {
+    //   let index = list.findIndex((item) => {
+    //     return item.id === this.currentSong.id
+    //   })
+    //   this.setCurrentIndex(index)
+    // },
     getLyric () {
       this.currentSong.getLyric().then((lyric) => {
         this.currentLyric = new Lyric(lyric, this.handleLyric)
@@ -461,6 +464,10 @@ export default {
   },
   watch: {
     currentSong (newSong, oldSong) {
+      // 如果列表中只有一首歌曲，并且被删除了就没有newSong
+      if (!newSong.id) {
+        return
+      }
       if (newSong === oldSong) {
         return
       }

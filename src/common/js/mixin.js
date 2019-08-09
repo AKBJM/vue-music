@@ -30,6 +30,7 @@ export const playlistMixin = {
   }
 }
 
+// playlist和player两个组件公用的部分
 export const playerMixin = {
   computed: {
     iconMode () {
