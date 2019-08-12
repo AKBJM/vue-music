@@ -38,6 +38,7 @@ export default {
       type: Boolean,
       default: false
     },
+    // 添加歌曲后歌曲列表高度计算不正确，添加一个延时变量，
     refreshDelay: {
       type: Number,
       default: 20

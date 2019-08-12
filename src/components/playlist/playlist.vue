@@ -11,7 +11,7 @@
             </span>
           </h1>
         </div>
-        <scroll ref="scroll" :data="sequenceList" class="list-content">
+        <scroll ref="scroll" :data="sequenceList" class="list-content" :refreshDelay="refreshDelay">
           <transition-group name="list" tag="ul">
             <li
               class="item"
@@ -32,7 +32,7 @@
           </transition-group>
         </scroll>
         <div class="list-operate">
-          <div class="add">
+          <div class="add" @click="addSong">
             <i class="icon-add"></i>
             <span class="text">添加歌曲到队列</span>
           </div>
@@ -46,6 +46,7 @@
           confirmBtnText="清空"
           @confirm="clearAll"
         ></confirm>
+        <add-song ref="addSong"></add-song>
       </div>
     </div>
   </transition>
@@ -56,6 +57,7 @@ import { mapActions } from 'vuex'
 import Scroll from '@/base/scroll/scroll'
 import { playMode } from '@/common/js/config'
 import Confirm from '@/base/confirm/confirm'
+import AddSong from 'components/add-song/add-song'
 
 import { playerMixin } from '@/common/js/mixin'
 
@@ -63,7 +65,8 @@ export default {
   mixins: [playerMixin],
   data () {
     return {
-      showflag: false
+      showflag: false,
+      refreshDelay: 100
     }
   },
   computed: {
@@ -129,6 +132,9 @@ export default {
     //   setCurrentIndex: 'SET_CURRENT_INDEX',
     //   setPlayingState: 'SET_PLAYING_STATE'
     // }),
+    addSong () {
+      this.$refs.addSong.show()
+    },
     ...mapActions([
       'deleteSong',
       'deleteSongList'
@@ -144,7 +150,8 @@ export default {
   },
   components: {
     Scroll,
-    Confirm
+    Confirm,
+    AddSong
   }
 }
 </script>

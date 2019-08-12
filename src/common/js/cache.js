@@ -1,9 +1,9 @@
 // 缓存相关内容 storage
 import storage from 'good-storage'
-
+// 搜索历史相关
 const SEARCH_KEY = '__search__'
 const SEARCH_MAX_LEN = 15
-
+// 播放历史相关
 const PLAY_KEY = '__play__'
 const PLAY_MAX_LEN = 200
 
@@ -61,7 +61,7 @@ export function clearSearch () {
 export function loadSearch () {
   return storage.get(SEARCH_KEY, [])
 }
-
+// 存储播放历史
 export function savePlay (song) {
   let songs = storage.get(PLAY_KEY, [])
   insertArray(songs, song, (item) => {
@@ -70,7 +70,7 @@ export function savePlay (song) {
   storage.set(PLAY_KEY, songs)
   return songs
 }
-
+// 读取播放历史
 export function loadPlay () {
   return storage.get(PLAY_KEY, [])
 }

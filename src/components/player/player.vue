@@ -135,7 +135,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 import animations from 'create-keyframe-animation'
 import { prefixStyle } from '@/common/js/dom'
 import progressBar from '@/base/progress-bar/progress-bar'
@@ -203,13 +203,6 @@ export default {
     open () {
       this.setFullScreen(true)
     },
-    ...mapMutations({
-      setFullScreen: 'SET_FULL_SCREEN',
-      setPlayingState: 'SET_PLAYING_STATE',
-      setCurrentIndex: 'SET_CURRENT_INDEX',
-      setPlayMode: 'SET_PLAY_MODE',
-      setPlaylist: 'SET_PLAYLIST'
-    }),
     enter (el, done) {
       const {x, y, scale} = this._getPosAndScale()
 
@@ -317,6 +310,8 @@ export default {
     },
     ready () {
       this.songReady = true
+      // 记录播放历史
+      this.savePlayHistory(this.currentSong)
     },
     error () {
       // 歌曲加载失败也可以正常执行
@@ -460,7 +455,17 @@ export default {
       this.$refs.lyricList.$el.style[TRANSITION_DURATION] = `${time}ms`
       this.$refs.middleL.style.opacity = _opacity
       this.$refs.middleL.style[TRANSITION_DURATION] = `${time}ms`
-    }
+    },
+    ...mapMutations({
+      setFullScreen: 'SET_FULL_SCREEN',
+      setPlayingState: 'SET_PLAYING_STATE',
+      setCurrentIndex: 'SET_CURRENT_INDEX',
+      setPlayMode: 'SET_PLAY_MODE',
+      setPlaylist: 'SET_PLAYLIST'
+    }),
+    ...mapActions([
+      'savePlayHistory'
+    ])
   },
   watch: {
     currentSong (newSong, oldSong) {
