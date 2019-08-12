@@ -63,6 +63,7 @@ export const playerMixin = {
       })
       this.setCurrentIndex(index)
     },
+    // 收藏相关 公用函数
     toggleFavorite (song) {
       if (this.isFavorite(song)) {
         this.deleteFavoriteList(song)

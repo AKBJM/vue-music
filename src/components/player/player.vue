@@ -84,7 +84,7 @@
               <i class="icon-next" @click="next"></i>
             </div>
             <div class="icon i-right">
-              <i class="icon icon-not-favorite"></i>
+              <i class="icon" :class="getFavoriteIcon(currentSong)" @click="toggleFavorite(currentSong)"></i>
             </div>
           </div>
         </div>
@@ -186,9 +186,9 @@ export default {
     ...mapGetters([
       'fullScreen',
       // 'playlist',
-      'currentSong',
-      'playing'
-      // 'currentIndex',
+      // 'currentSong',
+      'playing',
+      'currentIndex'
       // 'mode',
       // 'sequenceList'
     ])
@@ -282,6 +282,7 @@ export default {
         if (index === this.playlist.length) {
           index = 0
         }
+        console.log(index)
         this.setCurrentIndex(index)
         if (!this.playing) {
           this.togglePlaying()

@@ -21,14 +21,14 @@ export default {
   },
   methods: {
     show () {
-      this.showFlag = true
+      this.showflag = true
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
         this.hide()
       }, this.delay)
     },
     hide () {
-      this.showFlag = false
+      this.showflag = false
     }
   }
 }

@@ -6,7 +6,7 @@ const SEARCH_MAX_LEN = 15
 // 播放历史相关
 const PLAY_KEY = '__play__'
 const PLAY_MAX_LEN = 200
-
+// 收藏相关
 const FAVORITE_KEY = '__favorite__'
 const FAVORITE_MAX_LEN = 200
 
@@ -74,7 +74,7 @@ export function savePlay (song) {
 export function loadPlay () {
   return storage.get(PLAY_KEY, [])
 }
-
+// 保存收藏
 export function saveFavorite (song) {
   let songs = storage.get(FAVORITE_KEY, [])
   insertArray(songs, song, (item) => {
@@ -83,7 +83,7 @@ export function saveFavorite (song) {
   storage.set(FAVORITE_KEY, songs)
   return songs
 }
-
+// 删除收藏
 export function deleteFavorite (song) {
   let songs = storage.get(FAVORITE_KEY, [])
   deleteFromArray(songs, (item) => {
@@ -92,7 +92,7 @@ export function deleteFavorite (song) {
   storage.set(FAVORITE_KEY, songs)
   return songs
 }
-
+// 本地读取
 export function loadFavorite () {
   return storage.get(FAVORITE_KEY, [])
 }

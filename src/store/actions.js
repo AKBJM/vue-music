@@ -1,7 +1,7 @@
 import * as types from './mutation-types'
 import {playMode} from 'common/js/config'
 import {shuffle} from 'common/js/util'
-import {saveSearch, clearSearch, deleteSearch, savePlay} from 'common/js/cache'
+import {saveSearch, clearSearch, deleteSearch, savePlay, saveFavorite, deleteFavorite} from 'common/js/cache'
 
 function findIndex (list, song) {
   return list.findIndex((item) => {
@@ -112,11 +112,11 @@ export const deleteSong = function ({commit, state}, song) {
   const playingState = playlist.length > 0
   commit(types.SET_PLAYING_STATE, playingState)
 
-  // if (!playlist.length) {
-  //   commit(types.SET_PLAYING_STATE, false)
-  // } else {
-  //   commit(types.SET_PLAYING_STATE, true)
-  // }
+  if (!playlist.length) {
+    commit(types.SET_PLAYING_STATE, false)
+  } else {
+    commit(types.SET_PLAYING_STATE, true)
+  }
 }
 
 // 清空歌曲列表
@@ -130,11 +130,11 @@ export const deleteSongList = function ({commit}) {
 export const savePlayHistory = function ({commit}, song) {
   commit(types.SET_PLAY_HISTORY, savePlay(song))
 }
-
-// export const saveFavoriteList = function ({commit}, song) {
-//   commit(types.SET_FAVORITE_LIST, saveFavorite(song))
-// }
-
-// export const deleteFavoriteList = function ({commit}, song) {
-//   commit(types.SET_FAVORITE_LIST, deleteFavorite(song))
-// }
+// 添加收藏歌曲
+export const saveFavoriteList = function ({commit}, song) {
+  commit(types.SET_FAVORITE_LIST, saveFavorite(song))
+}
+// 删除收藏歌曲
+export const deleteFavoriteList = function ({commit}, song) {
+  commit(types.SET_FAVORITE_LIST, deleteFavorite(song))
+}
