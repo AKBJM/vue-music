@@ -126,7 +126,7 @@
     <audio
       :src="currentSong.url"
       ref="audio"
-      @canplay="ready"
+      @play="ready"
       @error="error"
       @timeupdate="updateTime"
       @ended="end"
@@ -277,6 +277,7 @@ export default {
       // 歌曲只有一首歌的时候
       if (this.playlist.length === 1) {
         this.loop()
+        return
       } else {
         let index = this.currentIndex + 1
         if (index === this.playlist.length) {
@@ -297,6 +298,7 @@ export default {
       // 歌曲只有一首歌的时候
       if (this.playlist.length === 1) {
         this.loop()
+        return
       } else {
         let index = this.currentIndex + 1
         if (index === -1) {
@@ -385,6 +387,10 @@ export default {
     // },
     getLyric () {
       this.currentSong.getLyric().then((lyric) => {
+        // 避免一首歌的歌词没加载玩的时候 又切换到另一首歌重新创建一个歌词
+        if (this.currentSong.lyric !== lyric) {
+          return
+        }
         this.currentLyric = new Lyric(lyric, this.handleLyric)
         if (this.playing) {
           this.currentLyric.play()
@@ -480,7 +486,9 @@ export default {
       if (this.currentLyric) {
         this.currentLyric.stop()
       }
-      setTimeout(() => {
+      // 快速切换播放状态
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
         this.$refs.audio.play()
         this.getLyric()
       }, 1000)
