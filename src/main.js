@@ -8,6 +8,9 @@ import store from './store'
 import fastclick from 'fastclick'
 import VueLazyload from 'vue-lazyload'
 
+/* eslint-disable no-unused-vars */
+import Vconsole from 'vconsole'
+
 import 'common/stylus/index.styl'
 
 /* eslint-disable no-new  移动端点击没有300ms的延迟 */

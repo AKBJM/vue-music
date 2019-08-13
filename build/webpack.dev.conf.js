@@ -16,8 +16,8 @@ const PORT = process.env.PORT && Number(process.env.PORT)
 const axios = require('axios')
 const express = require('express')
 const app = express()
-const apiRouter = express.Router()
-app.use('/api', apiRouter)
+// const apiRouter = express.Router()
+// app.use('/api', apiRouter)
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
